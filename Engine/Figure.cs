@@ -6,19 +6,17 @@ namespace Engine
 {
 	public class Figure
 	{
-		public Figure(FigureType type, Location? location = null) : base()
+		public Figure(FigureShape shape, Location? location = null) : base()
 		{
-			Type = type;
+			Shape = shape;
 			Location = location;
+			Color = FigureShapes.FigureParams[shape].Color + 0xff000000;
 		}
 
-		public enum FigureType { Angle, Stick };
-		public FigureType Type { get; }
+		public FigureShape Shape { get; }
 		public Location? Location { get; private set; }
+		internal uint Color { get; }
 		private IEnumerable<Tile> Tiles { get; set; }
-
-		private static bool X => true;
-		private static bool O => false;
 
 		public bool TryPutOnMap(Map map, Location location)
 		{
@@ -45,7 +43,7 @@ namespace Engine
 			{
 				var safeLoc = Location.Value;
 				List<Tile> tiles = new();
-				var tileMap = GetTileMap(this.Type);
+				var tileMap = FigureShapes.FigureParams[this.Shape].TileMap;
 				for (int x = 0; x < 3; ++x)
 				{
 					for (int y = 0; y < 3; ++y)
@@ -63,19 +61,5 @@ namespace Engine
 
 			return Tiles;
 		}
-
-		private static bool[,] GetTileMap(FigureType type)
-		{
-			return type switch
-			{
-				FigureType.Angle => AngleMap,
-				FigureType.Stick => StickMap,
-
-				_ => throw new NotImplementedException(),
-			};
-		}
-
-		private static readonly bool[,] AngleMap = new bool[,] { { X, X, O }, { X, O, O }, { O, O, O } };
-		private static readonly bool[,] StickMap = new bool[,] { { X, O, O }, { X, O, O }, { X, O, O } };
 	}
 }

@@ -4,8 +4,8 @@ using System.Numerics;
 
 namespace Engine
 {
-	internal static class Engine
+	public static class Engine
 	{
-		internal static Random RND = new Random();
+		public static Random RND = new Random();
 	}
 }

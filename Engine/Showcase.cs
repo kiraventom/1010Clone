@@ -26,8 +26,7 @@ namespace Engine
 
 		public void Update()
 		{
-			var type = Engine.RND.Next(0, 2);
-			Figure figure = new Figure(type == 0 ? Figure.FigureType.Angle : Figure.FigureType.Stick);
+			Figure figure = new Figure(FigureShapes.Random);
 			figure.TryPutOnMap(Map, new Location(0, 0));
 		}
 

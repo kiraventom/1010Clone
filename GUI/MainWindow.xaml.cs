@@ -42,7 +42,7 @@ namespace GUI
 
 			DraggingView.MouseDown += this.DraggingView_MouseDown;
 			DraggingView.MouseMove += this.DraggingView_MouseMove;
-			DraggingView.PaintSurface += this.DraggingView_PaintSurface; ;
+			DraggingView.PaintSurface += this.DraggingView_PaintSurface;
 
 			MapView.InvalidateVisual();
 			ShowcaseView.InvalidateVisual();
@@ -159,13 +159,14 @@ namespace GUI
 						(x + 1) * (float)TileSize.Width, 
 						(y + 1) * (float)TileSize.Height);
 
-					if (GameMap.GetTile(x, y) is null)
+					var tile = GameMap.GetTile(x, y);
+					if (tile is null)
 					{
-						Paint.Color = SKColors.LightGray;
+						Paint.Color = new SKColor(0xffd6d6d6);
 					}
 					else
 					{
-						Paint.Color = SKColors.Red;
+						Paint.Color = new SKColor(tile.Color);
 					}
 
 					canvas.DrawRect(skRect, Paint);
@@ -175,7 +176,7 @@ namespace GUI
 			// debug
 			if (Captured is not null)
 			{
-				Paint.Color = new SKColor(0, 0, 0, 64);
+				Paint.Color = new SKColor(0x44ffffff);
 
 				var draggableLoc = GetHoveredLocation(GameMap, Captured.Point, false);
 				if (draggableLoc is not null)
@@ -211,16 +212,12 @@ namespace GUI
 						(x + 1) * (float)TileSize.Width,
 						(y + 1) * (float)TileSize.Height);
 
-					if (Showcase.Map.GetTile(x, y) is null)
+					var tile = Showcase.Map.GetTile(x, y);
+					if (tile is not null)
 					{
-						Paint.Color = SKColors.LightGray;
+						Paint.Color = new SKColor(tile.Color);
+						canvas.DrawRect(skRect, Paint);
 					}
-					else
-					{
-						Paint.Color = SKColors.Red;
-					}
-
-					canvas.DrawRect(skRect, Paint);
 				}
 			}
 		}
@@ -230,7 +227,6 @@ namespace GUI
 			var canvas = e.Surface.Canvas;
 
 			canvas.Clear(SKColors.Transparent);
-			Paint.Color = SKColors.Green;
 
 			var tiles = Captured.Figure.GetTiles();
 			if (tiles is null)
@@ -238,6 +234,7 @@ namespace GUI
 
 			foreach (var tile in tiles)
 			{
+				Paint.Color = new SKColor(tile.Color);
 				int x = tile.X;
 				int y = tile.Y;
 				var skRect = new SKRect(
