@@ -8,7 +8,7 @@ namespace Engine
 		{
 		}
 
-		public override void AddFigure(Figure figure)
+		public void AddFigure(Figure figure)
 		{
 			var tiles = figure.GetTiles();
 			foreach (var tile in tiles)

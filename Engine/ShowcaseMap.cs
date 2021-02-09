@@ -1,37 +1,34 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-
-namespace Engine
+﻿namespace Engine
 {
 	public class ShowcaseMap : Map
 	{
 		public ShowcaseMap(uint size) : base(size)
 		{
-			Figures = new();
-			Figures.CollectionChanged += this.Figures_CollectionChanged;
 		}
 
-		public override void AddFigure(Figure figure) => Figures.Add(figure);
-
-		internal ObservableCollection<Figure> Figures { get; }
-
-		private void Figures_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		private Figure _figure;
+		internal Figure Figure 
 		{
-			if (e.Action == NotifyCollectionChangedAction.Add)
+			get => _figure;
+			set
 			{
-				foreach (var tile in (e.NewItems[0] as Figure).GetTiles())
+				if (_figure is not null)
 				{
-					Tiles[tile.X, tile.Y] = tile;
+					foreach (var tile in _figure.GetTiles())
+					{
+						Tiles[tile.X, tile.Y] = null;
+					}
 				}
-			}
-			else
-			if (e.Action == NotifyCollectionChangedAction.Remove)
-			{
-				foreach (var tile in (e.OldItems[0] as Figure).GetTiles())
+
+				_figure = value;
+				if (_figure is not null)
 				{
-					Tiles[tile.X, tile.Y] = null;
+					foreach (var tile in _figure.GetTiles())
+					{
+						Tiles[tile.X, tile.Y] = tile;
+					}
 				}
-			}
+			} 
 		}
 	}
 }

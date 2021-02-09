@@ -5,31 +5,59 @@ namespace Engine
 {
 	public class Showcase
 	{
-		public Showcase(/*int count*/)
+		public Showcase()
 		{
-			Map = new ShowcaseMap(3);
+			Maps = new ShowcaseMap[3]
+			{
+				new ShowcaseMap(3),
+				new ShowcaseMap(3),
+				new ShowcaseMap(3),
+			};
+
 			Update();
 		}
 
 		public void Pick(Figure figure)
 		{
-			Map.Figures.Remove(figure);
+			for (int i = 0; i < Maps.Length; ++i)
+			{
+				if (Maps[i].Figure == figure)
+				{
+					Maps[i].Figure = null;
+					return;
+				}
+			}
 		}
 
 		public void Return(Figure figure)
 		{
-			if (!Map.Figures.Any())
+			for (int i = 0; i < Maps.Length; ++i)
 			{
-				figure.TryPutOnMap(Map, new Location(0, 0));
+				if (Maps[i].Figure is null)
+				{
+					Maps[i].Figure = figure;
+					return;
+				}
 			}
 		}
 
 		public void Update()
 		{
-			Figure figure = new Figure(FigureShapes.Random);
-			figure.TryPutOnMap(Map, new Location(0, 0));
+			for (int i = 0; i < Maps.Length; ++i)
+			{
+				if (Maps[i].Figure is not null)
+				{
+					return;
+				}
+			}
+
+			for (int i = 0; i < Maps.Length; ++i)
+			{
+				Figure figure = new Figure(FigureShapes.GetRandom());
+				figure.TryPutOnMap(Maps[i], new Location(0, 0));
+			}
 		}
 
-		public ShowcaseMap Map { get; }
+		public ShowcaseMap[] Maps { get; }
 	}
 }

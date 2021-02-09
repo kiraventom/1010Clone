@@ -29,7 +29,16 @@ namespace Engine
 				return false;
 			}
 
-			map.AddFigure(this);
+			if (map is ShowcaseMap sm)
+			{
+				sm.Figure = this;
+			}
+			else
+			if (map is GameMap gm)
+			{
+				gm.AddFigure(this);
+			}
+
 			return true;
 		}
 

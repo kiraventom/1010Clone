@@ -6,6 +6,17 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
+	internal enum BasicShape
+	{
+		Angle = 0,
+		SmallStick,
+		Stick,
+		BigAngle,
+		Square,
+		BigSquare,
+		Dot
+	};
+
 	public enum FigureShape 
 	{ 
 		AngleNW, AngleNE, AngleSW, AngleSE,
@@ -28,27 +39,34 @@ namespace Engine
 				{ FigureShape.AngleSE, new FigureParams { TileMap = AngleSEMap, Color = 0x38c787 } },
 				{ FigureShape.AngleSW, new FigureParams { TileMap = AngleSWMap, Color = 0x38c787 } },
 
+				{ FigureShape.BigAngleNW, new FigureParams { TileMap = BigAngleNWMap, Color = 0x3fb6e0 } },
+				{ FigureShape.BigAngleNE, new FigureParams { TileMap = BigAngleNEMap, Color = 0x3fb6e0 } },
+				{ FigureShape.BigAngleSE, new FigureParams { TileMap = BigAngleSEMap, Color = 0x3fb6e0 } },
+				{ FigureShape.BigAngleSW, new FigureParams { TileMap = BigAngleSWMap, Color = 0x3fb6e0 } },
+
 				{ FigureShape.SmallStickWE, new FigureParams { TileMap = SmallStickWEMap, Color = 0xe39c3d } },
 				{ FigureShape.SmallStickNS, new FigureParams { TileMap = SmallStickNSMap, Color = 0xe39c3d } },
 
 				{ FigureShape.StickWE, new FigureParams { TileMap = StickWEMap, Color = 0xf06297 } },
 				{ FigureShape.StickNS, new FigureParams { TileMap = StickNSMap, Color = 0xf06297 } },
 
-				{ FigureShape.BigAngleNW, new FigureParams { TileMap = BigAngleNWMap, Color = 0x3fb6e0 } },
-				{ FigureShape.BigAngleNE, new FigureParams { TileMap = BigAngleNEMap, Color = 0x3fb6e0 } },
-				{ FigureShape.BigAngleSE, new FigureParams { TileMap = BigAngleSEMap, Color = 0x3fb6e0 } },
-				{ FigureShape.BigAngleSW, new FigureParams { TileMap = BigAngleSWMap, Color = 0x3fb6e0 } },
-
 				{ FigureShape.Square, new FigureParams { TileMap = Square, Color = 0x59de5b } },
 
 				{ FigureShape.BigSquare, new FigureParams { TileMap = BigSquare, Color = 0x7b66e3 } },
 
-				{ FigureShape.Dot, new FigureParams { TileMap = BigSquare, Color = 0x4759de } },
+				{ FigureShape.Dot, new FigureParams { TileMap = Dot, Color = 0x4759de } },
 			};
 		}
 
 		public static Dictionary<FigureShape, FigureParams> FigureParams { get; }
-		public static FigureShape Random => FigureParams.ElementAt(Engine.RND.Next(FigureParams.Count)).Key;
+
+		private static readonly FigureShape[] Angles = new[] { FigureShape.AngleNW, FigureShape.AngleNE, FigureShape.AngleSE, FigureShape.AngleSW };
+		private static readonly FigureShape[] BigAngles = new[] { FigureShape.BigAngleNW, FigureShape.BigAngleNE, FigureShape.BigAngleSE, FigureShape.BigAngleSW };
+		private static readonly FigureShape[] SmallSticks = new[] { FigureShape.SmallStickWE, FigureShape.SmallStickNS };
+		private static readonly FigureShape[] Sticks = new[] { FigureShape.StickWE, FigureShape.StickNS };
+		private static readonly FigureShape[] Squares = new[] { FigureShape.Square };
+		private static readonly FigureShape[] BigSquares = new[] { FigureShape.BigSquare };
+		private static readonly FigureShape[] Dots = new[] { FigureShape.Dot };
 
 		private static bool X => true;
 		private static bool O => false;
@@ -74,6 +92,35 @@ namespace Engine
 		private static readonly bool[,] BigSquare = new bool[,] { { X, X, X }, { X, X, X }, { X, X, X } };
 
 		private static readonly bool[,] Dot = new bool[,] { { X, O, O }, { O, O, O }, { O, O, O } };
+
+		public static FigureShape GetRandom()
+		{
+			var allBasics = Enum.GetValues(typeof(BasicShape));
+			var basicShape = (BasicShape)allBasics.GetValue(Engine.RND.Next(allBasics.Length));
+			return GetRandom(basicShape);
+		}
+
+		public static FigureShape GetRandom(BasicShape basic)
+		{
+			var rotations = GetRotations(basic);
+			return rotations.ElementAt(Engine.RND.Next(rotations.Length));
+		}
+
+		private static FigureShape[] GetRotations(BasicShape basic)
+		{
+			return basic switch
+			{
+				BasicShape.Angle => Angles,
+				BasicShape.SmallStick => SmallSticks,
+				BasicShape.Stick => Sticks,
+				BasicShape.BigAngle => BigAngles,
+				BasicShape.Square => Squares,
+				BasicShape.BigSquare => BigSquares,
+				BasicShape.Dot => Dots,
+
+				_ => throw new NotImplementedException()
+			};
+		}
 	}
 
 	internal record FigureParams

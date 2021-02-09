@@ -37,15 +37,21 @@ namespace GUI
 
 			MapView.PaintSurface += this.MainView_PaintSurface;
 
-			ShowcaseView.MouseDown += this.ShowcaseView_MouseDown;
-			ShowcaseView.PaintSurface += this.ShowcaseView_PaintSurface;
+			Showcase1View.MouseDown += this.ShowcaseView_MouseDown;
+			Showcase1View.PaintSurface += this.ShowcaseView_PaintSurface;
+			Showcase2View.MouseDown += this.ShowcaseView_MouseDown;
+			Showcase2View.PaintSurface += this.ShowcaseView_PaintSurface;
+			Showcase3View.MouseDown += this.ShowcaseView_MouseDown;
+			Showcase3View.PaintSurface += this.ShowcaseView_PaintSurface;
 
 			DraggingView.MouseDown += this.DraggingView_MouseDown;
 			DraggingView.MouseMove += this.DraggingView_MouseMove;
 			DraggingView.PaintSurface += this.DraggingView_PaintSurface;
 
 			MapView.InvalidateVisual();
-			ShowcaseView.InvalidateVisual();
+			Showcase1View.InvalidateVisual();
+			Showcase2View.InvalidateVisual();
+			Showcase3View.InvalidateVisual();
 		}
 
 		private Location? GetHoveredLocation(Map map, Point point, bool isMouseLocation)
@@ -82,26 +88,28 @@ namespace GUI
 
 		private void ShowcaseView_MouseDown(object sender, MouseButtonEventArgs e)
 		{
-			var hoveredLoc = GetHoveredLocation(Showcase.Map, e.GetPosition(ShowcaseView), true);
+			var showcaseView = sender as SkiaSharp.Views.WPF.SKElement;
+			var map = Showcase.Maps[int.Parse(showcaseView.Tag.ToString())];
+			var hoveredLoc = GetHoveredLocation(map, e.GetPosition(showcaseView), true);
 			if (hoveredLoc is null)
 			{
 				return;
 			}
 
 			var safeHoveredLoc = hoveredLoc.Value;
-			var hoveredTile = Showcase.Map.GetTile(safeHoveredLoc);
+			var hoveredTile = map.GetTile(safeHoveredLoc);
 			var figure = hoveredTile?.Parent;
 			if (figure is null)
 				return;
 
 			Showcase.Pick(figure);
-			ShowcaseView.InvalidateVisual();
+			showcaseView.InvalidateVisual();
 			Captured = new Draggable(figure);
 
 			DraggingView.Visibility = Visibility.Visible;
 			DraggingView.InvalidateVisual();
 
-			ShowcaseClickOffset = Point.Subtract(e.GetPosition(ShowcaseView), new Point());
+			ShowcaseClickOffset = Point.Subtract(e.GetPosition(showcaseView), new Point());
 			DraggingView_MouseMove(sender, e);
 		}
 
@@ -135,7 +143,9 @@ namespace GUI
 			DraggingView.Visibility = Visibility.Hidden;
 			MapView.InvalidateVisual();
 			DraggingView.InvalidateVisual();
-			ShowcaseView.InvalidateVisual();
+			Showcase1View.InvalidateVisual();
+			Showcase2View.InvalidateVisual();
+			Showcase3View.InvalidateVisual();
 		}
 
 		private void Window_MouseLeave(object sender, MouseEventArgs e)
@@ -199,12 +209,14 @@ namespace GUI
 		private void ShowcaseView_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
 		{
 			var canvas = e.Surface.Canvas;
-
 			canvas.Clear(SKColors.White);
 
-			for (int x = 0; x < Showcase.Map.Size; ++x)
+			var showcaseView = sender as SkiaSharp.Views.WPF.SKElement;
+			var map = Showcase.Maps[int.Parse(showcaseView.Tag.ToString())];
+
+			for (int x = 0; x < map.Size; ++x)
 			{
-				for (int y = 0; y < Showcase.Map.Size; ++y)
+				for (int y = 0; y < map.Size; ++y)
 				{
 					var skRect = new SKRect(
 						x * (float)TileSize.Width + TileMargin,
@@ -212,7 +224,7 @@ namespace GUI
 						(x + 1) * (float)TileSize.Width,
 						(y + 1) * (float)TileSize.Height);
 
-					var tile = Showcase.Map.GetTile(x, y);
+					var tile = map.GetTile(x, y);
 					if (tile is not null)
 					{
 						Paint.Color = new SKColor(tile.Color);

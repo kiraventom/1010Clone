@@ -8,8 +8,6 @@
 			Tiles = new Tile[Size, Size];
 		}
 
-		public abstract void AddFigure(Figure figure);
-
 		public uint Size { get; }
 		protected Tile[,] Tiles { get; }
 		
