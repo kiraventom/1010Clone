@@ -30,10 +30,10 @@ namespace GUI
 		}
 
 		public static Point ScaleUp(this Point point) => new Point(point.X * Scale.Value, point.Y * Scale.Value);
-		public static Rect ScaleUp(this Rect rect) => new Rect(rect.X * Scale.Value, rect.Y * Scale.Value,
-																rect.Width * Scale.Value, rect.Height * Scale.Value);
 		public static Point ScaleDown(this Point point) => new Point(point.X / Scale.Value, point.Y / Scale.Value);
-		public static Rect ScaleDown(this Rect rect) => new Rect(rect.X / Scale.Value, rect.Y / Scale.Value,
-																rect.Width / Scale.Value, rect.Height / Scale.Value);
+		public static Size ScaleUp(this Size size) => new Size(size.Width * Scale.Value, size.Height * Scale.Value);
+		public static Size ScaleDown(this Size size) => new Size(size.Width / Scale.Value, size.Height / Scale.Value);
+		public static Vector ScaleUp(this Vector vec) => new Vector(vec.X * Scale.Value, vec.Y * Scale.Value);
+		public static Vector ScaleDown(this Vector vec) => new Vector(vec.X / Scale.Value, vec.Y / Scale.Value);
 	}
 }

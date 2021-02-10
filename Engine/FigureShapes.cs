@@ -11,6 +11,7 @@ namespace Engine
 		Angle = 0,
 		SmallStick,
 		Stick,
+		LongStick,
 		BigAngle,
 		Square,
 		BigSquare,
@@ -22,6 +23,7 @@ namespace Engine
 		AngleNW, AngleNE, AngleSW, AngleSE,
 		SmallStickWE, SmallStickNS,
 		StickWE, StickNS,
+		LongStickWE, LongStickNS,
 		BigAngleNW, BigAngleNE, BigAngleSW, BigAngleSE,
 		Square,
 		BigSquare,
@@ -50,6 +52,9 @@ namespace Engine
 				{ FigureShape.StickWE, new FigureParams { TileMap = StickWEMap, Color = 0xf06297 } },
 				{ FigureShape.StickNS, new FigureParams { TileMap = StickNSMap, Color = 0xf06297 } },
 
+				{ FigureShape.LongStickWE, new FigureParams { TileMap = LongStickWEMap, Color = 0xe34b4b } },
+				{ FigureShape.LongStickNS, new FigureParams { TileMap = LongStickNSMap, Color = 0xe34b4b } },
+
 				{ FigureShape.Square, new FigureParams { TileMap = Square, Color = 0x59de5b } },
 
 				{ FigureShape.BigSquare, new FigureParams { TileMap = BigSquare, Color = 0x7b66e3 } },
@@ -64,6 +69,7 @@ namespace Engine
 		private static readonly FigureShape[] BigAngles = new[] { FigureShape.BigAngleNW, FigureShape.BigAngleNE, FigureShape.BigAngleSE, FigureShape.BigAngleSW };
 		private static readonly FigureShape[] SmallSticks = new[] { FigureShape.SmallStickWE, FigureShape.SmallStickNS };
 		private static readonly FigureShape[] Sticks = new[] { FigureShape.StickWE, FigureShape.StickNS };
+		private static readonly FigureShape[] LongSticks = new[] { FigureShape.LongStickWE, FigureShape.LongStickNS };
 		private static readonly FigureShape[] Squares = new[] { FigureShape.Square };
 		private static readonly FigureShape[] BigSquares = new[] { FigureShape.BigSquare };
 		private static readonly FigureShape[] Dots = new[] { FigureShape.Dot };
@@ -71,27 +77,133 @@ namespace Engine
 		private static bool X => true;
 		private static bool O => false;
 
-		private static readonly bool[,] AngleNWMap = new bool[,] { { O, X, O }, { X, X, O }, { O, O, O } };
-		private static readonly bool[,] AngleNEMap = new bool[,] { { X, O, O }, { X, X, O }, { O, O, O } };
-		private static readonly bool[,] AngleSEMap = new bool[,] { { X, X, O }, { X, O, O }, { O, O, O } };
-		private static readonly bool[,] AngleSWMap = new bool[,] { { X, X, O }, { O, X, O }, { O, O, O } };
+		///////////////////
 
-		private static readonly bool[,] SmallStickNSMap = new bool[,] { { X, X, O }, { O, O, O }, { O, O, O } };
-		private static readonly bool[,] SmallStickWEMap = new bool[,] { { X, O, O }, { X, O, O }, { O, O, O } };
+		private static readonly bool[,] AngleNWMap = new bool[,] { 
+			{ O, X, O, O }, 
+			{ X, X, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
+		private static readonly bool[,] AngleNEMap = new bool[,] { 
+			{ X, O, O, O }, 
+			{ X, X, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
+		private static readonly bool[,] AngleSEMap = new bool[,] { 
+			{ X, X, O, O }, 
+			{ X, O, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
+		private static readonly bool[,] AngleSWMap = new bool[,] { 
+			{ X, X, O, O }, 
+			{ O, X, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
 
-		private static readonly bool[,] StickNSMap = new bool[,] { { X, O, O }, { X, O, O }, { X, O, O } };
-		private static readonly bool[,] StickWEMap = new bool[,] { { X, X, X }, { O, O, O }, { O, O, O } };
+		///////////////////
 
-		private static readonly bool[,] BigAngleNWMap = new bool[,] { { O, O, X }, { O, O, X }, { X, X, X } };
-		private static readonly bool[,] BigAngleNEMap = new bool[,] { { X, O, O }, { X, O, O }, { X, X, X } };
-		private static readonly bool[,] BigAngleSEMap = new bool[,] { { X, X, X }, { X, O, O }, { X, O, O } };
-		private static readonly bool[,] BigAngleSWMap = new bool[,] { { X, X, X }, { O, O, X }, { O, O, X } };
+		private static readonly bool[,] SmallStickNSMap = new bool[,] { 
+			{ X, X, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
+		private static readonly bool[,] SmallStickWEMap = new bool[,] { 
+			{ X, O, O, O }, 
+			{ X, O, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
 
-		private static readonly bool[,] Square = new bool[,] { { X, X, O }, { X, X, O }, { O, O, O } };
+		///////////////////
+		
+		private static readonly bool[,] StickNSMap = new bool[,] { 
+			{ X, O, O, O }, 
+			{ X, O, O, O }, 
+			{ X, O, O, O }, 
+			{ O, O, O, O } 
+		};
+		private static readonly bool[,] StickWEMap = new bool[,] { 
+			{ X, X, X, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
 
-		private static readonly bool[,] BigSquare = new bool[,] { { X, X, X }, { X, X, X }, { X, X, X } };
+		///////////////////
 
-		private static readonly bool[,] Dot = new bool[,] { { X, O, O }, { O, O, O }, { O, O, O } };
+		private static readonly bool[,] LongStickNSMap = new bool[,] { 
+			{ X, O, O, O }, 
+			{ X, O, O, O }, 
+			{ X, O, O, O },
+			{ X, O, O, O } 
+		};
+		private static readonly bool[,] LongStickWEMap = new bool[,] { 
+			{ X, X, X, X }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
+
+		///////////////////
+
+		private static readonly bool[,] BigAngleNWMap = new bool[,] { 
+			{ O, O, X, O }, 
+			{ O, O, X, O }, 
+			{ X, X, X, O }, 
+			{ O, O, O, O } 
+		};
+		private static readonly bool[,] BigAngleNEMap = new bool[,] { 
+			{ X, O, O, O }, 
+			{ X, O, O, O }, 
+			{ X, X, X, O }, 
+			{ O, O, O, O } 
+		};
+		private static readonly bool[,] BigAngleSEMap = new bool[,] { 
+			{ X, X, X, O }, 
+			{ X, O, O, O }, 
+			{ X, O, O, O }, 
+			{ O, O, O, O } 
+		};
+		private static readonly bool[,] BigAngleSWMap = new bool[,] { 
+			{ X, X, X, O }, 
+			{ O, O, X, O }, 
+			{ O, O, X, O }, 
+			{ O, O, O, O } 
+		};
+
+		///////////////////
+
+		private static readonly bool[,] Square = new bool[,] { 
+			{ X, X, O, O }, 
+			{ X, X, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
+
+		///////////////////
+
+		private static readonly bool[,] BigSquare = new bool[,] { 
+			{ X, X, X, O }, 
+			{ X, X, X, O }, 
+			{ X, X, X, O }, 
+			{ O, O, O, O } 
+		};
+
+		///////////////////
+
+		private static readonly bool[,] Dot = new bool[,] { 
+			{ X, O, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O }, 
+			{ O, O, O, O } 
+		};
+
+		///////////////////
 
 		public static FigureShape GetRandom()
 		{
@@ -113,6 +225,7 @@ namespace Engine
 				BasicShape.Angle => Angles,
 				BasicShape.SmallStick => SmallSticks,
 				BasicShape.Stick => Sticks,
+				BasicShape.LongStick => LongSticks,
 				BasicShape.BigAngle => BigAngles,
 				BasicShape.Square => Squares,
 				BasicShape.BigSquare => BigSquares,

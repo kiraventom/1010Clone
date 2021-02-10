@@ -9,9 +9,9 @@ namespace Engine
 		{
 			Maps = new ShowcaseMap[3]
 			{
-				new ShowcaseMap(3),
-				new ShowcaseMap(3),
-				new ShowcaseMap(3),
+				new ShowcaseMap(4),
+				new ShowcaseMap(4),
+				new ShowcaseMap(4),
 			};
 
 			Update();

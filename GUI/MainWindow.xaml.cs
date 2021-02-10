@@ -25,11 +25,20 @@ namespace GUI
 		private SKPaint Paint { get; set; }
 		private Size TileSize => new Size(MapView.ActualWidth / GameMap.Size - TileMargin, MapView.ActualHeight / GameMap.Size - TileMargin);
 		private Draggable Captured { get; set; }
-		private const uint TileMargin = 5;
+		private uint TileMargin => (uint)Math.Ceiling(MapView.ActualWidth / GameMap.Size / 10.0);
 
 		private void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
 			DpiScaler.Initialize(this);
+
+			Width = this.Width / DpiScaler.Scale.Value;
+			Height = this.Height / DpiScaler.Scale.Value;
+			MainGrid.Margin = new Thickness(MainGrid.Margin.Left / DpiScaler.Scale.Value);
+
+			if (Left < 0)
+				this.Left = 0;
+			if (Top < 0)
+				this.Top = 0;
 
 			Paint = new SKPaint() { Color = SKColors.Black };
 
@@ -73,8 +82,9 @@ namespace GUI
 		private void DraggingView_MouseMove(object sender, MouseEventArgs e)
 		{
 			var prevLoc = MouseLocation;
-			MouseLocation = e.GetPosition(DraggingView);
-			MouseLocation = Point.Add(MouseLocation, - ShowcaseClickOffset);
+			var position = DpiScaler.ScaleUp(e.GetPosition(DraggingView));
+			MouseLocation = position;
+			MouseLocation = Point.Add(position, -DpiScaler.ScaleUp(DpiScaler.ScaleUp(ShowcaseClickOffset))); // the fuck is this
 
 			if (Captured is not null)
 			{
@@ -89,8 +99,9 @@ namespace GUI
 		private void ShowcaseView_MouseDown(object sender, MouseButtonEventArgs e)
 		{
 			var showcaseView = sender as SkiaSharp.Views.WPF.SKElement;
+			var position = DpiScaler.ScaleDown(e.GetPosition(showcaseView));
 			var map = Showcase.Maps[int.Parse(showcaseView.Tag.ToString())];
-			var hoveredLoc = GetHoveredLocation(map, e.GetPosition(showcaseView), true);
+			var hoveredLoc = GetHoveredLocation(map, position, true);
 			if (hoveredLoc is null)
 			{
 				return;
@@ -109,7 +120,7 @@ namespace GUI
 			DraggingView.Visibility = Visibility.Visible;
 			DraggingView.InvalidateVisual();
 
-			ShowcaseClickOffset = Point.Subtract(e.GetPosition(showcaseView), new Point());
+			ShowcaseClickOffset = Point.Subtract(position, new Point());
 			DraggingView_MouseMove(sender, e);
 		}
 
@@ -120,7 +131,7 @@ namespace GUI
 				return;
 			}
 
-			var draggableLoc = GetHoveredLocation(GameMap, Captured.Point, false);
+			var draggableLoc = GetHoveredLocation(GameMap, DpiScaler.ScaleDown(Captured.Point), false);
 			if (draggableLoc is not null)
 			{
 				var safeDraggableLoc = draggableLoc.Value;
@@ -164,10 +175,10 @@ namespace GUI
 				for (int y = 0; y < GameMap.Size; ++y)
 				{
 					var skRect = new SKRect(
-						x * (float)TileSize.Width + TileMargin, 
-						y * (float)TileSize.Height + TileMargin, 
-						(x + 1) * (float)TileSize.Width, 
-						(y + 1) * (float)TileSize.Height);
+						(x * (float)TileSize.Width + TileMargin) * (float)DpiScaler.Scale.Value, 
+						(y * (float)TileSize.Height + TileMargin) * (float)DpiScaler.Scale.Value, 
+						((x + 1) * (float)TileSize.Width) * (float)DpiScaler.Scale.Value, 
+						((y + 1) * (float)TileSize.Height) * (float)DpiScaler.Scale.Value);
 
 					var tile = GameMap.GetTile(x, y);
 					if (tile is null)
@@ -188,17 +199,17 @@ namespace GUI
 			{
 				Paint.Color = new SKColor(0x44ffffff);
 
-				var draggableLoc = GetHoveredLocation(GameMap, Captured.Point, false);
+				var draggableLoc = GetHoveredLocation(GameMap, DpiScaler.ScaleDown(Captured.Point), false);
 				if (draggableLoc is not null)
 				{
 					foreach (var tile in Captured.Figure.GetTiles())
 					{
 						var safeDraggableLoc = draggableLoc.Value;
 						var skRect = new SKRect(
-							(safeDraggableLoc.X + tile.X) * (float)TileSize.Width + TileMargin,
-							(safeDraggableLoc.Y + tile.Y) * (float)TileSize.Height + TileMargin,
-							(safeDraggableLoc.X + tile.X + 1) * (float)TileSize.Width,
-							(safeDraggableLoc.Y + tile.Y + 1) * (float)TileSize.Height);
+							((safeDraggableLoc.X + tile.X) * (float)TileSize.Width + TileMargin) * (float)DpiScaler.Scale.Value,
+							((safeDraggableLoc.Y + tile.Y) * (float)TileSize.Height + TileMargin) * (float)DpiScaler.Scale.Value,
+							((safeDraggableLoc.X + tile.X + 1) * (float)TileSize.Width) * (float)DpiScaler.Scale.Value,
+							((safeDraggableLoc.Y + tile.Y + 1) * (float)TileSize.Height) * (float)DpiScaler.Scale.Value);
 
 						canvas.DrawRect(skRect, Paint);
 					}
@@ -219,10 +230,10 @@ namespace GUI
 				for (int y = 0; y < map.Size; ++y)
 				{
 					var skRect = new SKRect(
-						x * (float)TileSize.Width + TileMargin,
-						y * (float)TileSize.Height + TileMargin,
-						(x + 1) * (float)TileSize.Width,
-						(y + 1) * (float)TileSize.Height);
+						(x * (float)TileSize.Width + TileMargin) * (float)DpiScaler.Scale.Value,
+						(y * (float)TileSize.Height + TileMargin) * (float)DpiScaler.Scale.Value,
+						((x + 1) * (float)TileSize.Width) * (float)DpiScaler.Scale.Value,
+						((y + 1) * (float)TileSize.Height) * (float)DpiScaler.Scale.Value);
 
 					var tile = map.GetTile(x, y);
 					if (tile is not null)
@@ -250,10 +261,10 @@ namespace GUI
 				int x = tile.X;
 				int y = tile.Y;
 				var skRect = new SKRect(
-						(float)Captured.Point.X + x * (float)TileSize.Width + TileMargin,
-						(float)Captured.Point.Y + y * (float)TileSize.Height + TileMargin,
-						(float)Captured.Point.X + (x + 1) * (float)TileSize.Width,
-						(float)Captured.Point.Y + (y + 1) * (float)TileSize.Height);
+						((float)Captured.Point.X / (float)DpiScaler.Scale.Value + x * (float)TileSize.Width + TileMargin) * (float)DpiScaler.Scale.Value,
+						((float)Captured.Point.Y / (float)DpiScaler.Scale.Value + y * (float)TileSize.Height + TileMargin) * (float)DpiScaler.Scale.Value,
+						((float)Captured.Point.X / (float)DpiScaler.Scale.Value + (x + 1) * (float)TileSize.Width) * (float)DpiScaler.Scale.Value,
+						((float)Captured.Point.Y / (float)DpiScaler.Scale.Value + (y + 1) * (float)TileSize.Height) * (float)DpiScaler.Scale.Value);
 
 				canvas.DrawRect(skRect, Paint);
 			}
