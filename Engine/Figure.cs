@@ -25,7 +25,7 @@ namespace Engine
 			//                     out of bounds                    intersection
 			if (tiles.Any(t => !map.Contains(t.Coords) ||  map.GetTile(t.Coords) is not null)) 
 			{
-				Location = null;
+				Location = new Location(0, 0);
 				return false;
 			}
 

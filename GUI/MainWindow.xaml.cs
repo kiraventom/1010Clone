@@ -23,9 +23,10 @@ namespace GUI
 		private Point MouseLocation { get; set; }
 		private Vector ShowcaseClickOffset { get; set; }
 		private SKPaint Paint { get; set; }
-		private Size TileSize => new Size(MapView.ActualWidth / GameMap.Size - TileMargin, MapView.ActualHeight / GameMap.Size - TileMargin);
+		private double SmallerSide => MapView.ActualWidth < MapView.ActualHeight ? MapView.ActualWidth : MapView.ActualHeight;
+		private Size TileSize => new Size(SmallerSide / GameMap.Size - TileMargin, SmallerSide / GameMap.Size - TileMargin);
 		private Draggable Captured { get; set; }
-		private uint TileMargin => (uint)Math.Ceiling(MapView.ActualWidth / GameMap.Size / 10.0);
+		private uint TileMargin => (uint)Math.Ceiling(SmallerSide / GameMap.Size / 10.0);
 
 		private void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
@@ -53,7 +54,7 @@ namespace GUI
 			Showcase3View.MouseDown += this.ShowcaseView_MouseDown;
 			Showcase3View.PaintSurface += this.ShowcaseView_PaintSurface;
 
-			DraggingView.MouseDown += this.DraggingView_MouseDown;
+			DraggingView.MouseUp += this.DraggingView_MouseUp;
 			DraggingView.MouseMove += this.DraggingView_MouseMove;
 			DraggingView.PaintSurface += this.DraggingView_PaintSurface;
 
@@ -124,7 +125,7 @@ namespace GUI
 			DraggingView_MouseMove(sender, e);
 		}
 
-		private void DraggingView_MouseDown(object sender, MouseButtonEventArgs e)
+		private void DraggingView_MouseUp(object sender, MouseButtonEventArgs e)
 		{
 			if (Captured is null)
 			{
