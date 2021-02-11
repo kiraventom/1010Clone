@@ -1,0 +1,12 @@
+<Project>
+ <PropertyGroup>
+   <Deterministic>true</Deterministic>
+ </PropertyGroup>
+  
+  <PropertyGroup>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
+	<MSBuildProjectExtensionsPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/obj</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+  
+</Project>

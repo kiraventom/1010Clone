@@ -17,11 +17,6 @@
     <Page Remove="obj\**" />
     <Page Remove="out\**" />
   </ItemGroup>
-  
-  <PropertyGroup>
-    <BaseOutputPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/bin</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
-  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.80.2" />
