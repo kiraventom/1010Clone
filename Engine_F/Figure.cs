@@ -23,9 +23,9 @@ namespace Engine
 			Location = location;
 			var tiles = GetTiles();
 			//                     out of bounds                    intersection
-			if (tiles.Any(t => !map.Contains(t.Coords) ||  map.GetTile(t.Coords) is not null)) 
+			if (tiles.Any(t => !map.Contains(t.Coords) ||  map.GetTile(t.Coords) != null)) 
 			{
-				Location = new(0, 0);
+				Location = new Location(0, 0);
 				return false;
 			}
 
@@ -51,7 +51,7 @@ namespace Engine
 			else
 			{
 				var safeLoc = Location.Value;
-				List<Tile> tiles = new();
+				List<Tile> tiles = new List<Tile>();
 				var tileMap = FigureShapes.FigureParams[this.Shape].TileMap;
 				for (int x = 0; x < 4; ++x)
 				{

@@ -17,16 +17,19 @@ namespace GUI
 			var wih = new WindowInteropHelper(window);
 			IntPtr hWnd = wih.Handle;
 			uint dpi = GetDpiForWindow(hWnd);
-			Scale = dpi switch
-			{
-				96 => 1.0,
-				120 => 1.25,
-				144 => 1.50,
-				168 => 1.75,
-				0 => throw new Exception("GetDpiForWindow returned 0"),
+			if (dpi == 96)
+				Scale = 1.0;
+			if (dpi == 120)
+				Scale = 1.25;
+			if (dpi == 144)
+				Scale = 1.50;
+			if (dpi == 168)
+				Scale = 1.75;
+			if (dpi == 0)
+				throw new Exception("GetDpiForWindow returned 0");
 
-				_ => 1.0
-			};
+			if (Scale is null)
+				Scale = 1.0;
 		}
 
 		public static Point ScaleUp(this Point point) => new Point(point.X * Scale.Value, point.Y * Scale.Value);

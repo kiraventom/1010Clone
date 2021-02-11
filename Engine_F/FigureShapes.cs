@@ -34,7 +34,7 @@ namespace Engine
 	{
 		static FigureShapes()
 		{
-			FigureParams = new()
+			FigureParams = new Dictionary<FigureShape, FigureParams>()
 			{
 				{ FigureShape.AngleNW, new FigureParams { TileMap = AngleNWMap, Color = 0x38c787 } },
 				{ FigureShape.AngleNE, new FigureParams { TileMap = AngleNEMap, Color = 0x38c787 } },
@@ -220,25 +220,30 @@ namespace Engine
 
 		private static FigureShape[] GetRotations(BasicShape basic)
 		{
-			return basic switch
-			{
-				BasicShape.Angle => Angles,
-				BasicShape.SmallStick => SmallSticks,
-				BasicShape.Stick => Sticks,
-				BasicShape.LongStick => LongSticks,
-				BasicShape.BigAngle => BigAngles,
-				BasicShape.Square => Squares,
-				BasicShape.BigSquare => BigSquares,
-				BasicShape.Dot => Dots,
+			if (basic == BasicShape.Angle)
+				return Angles;
+			if (basic == BasicShape.SmallStick)
+				return SmallSticks;
+			if (basic == BasicShape.Stick)
+				return Sticks;
+			if (basic == BasicShape.LongStick)
+				return LongSticks;
+			if (basic == BasicShape.BigAngle)
+				return BigAngles;
+			if (basic == BasicShape.Square)
+				return Squares;
+			if (basic == BasicShape.BigSquare)
+				return BigSquares;
+			if (basic == BasicShape.Dot)
+				return Dots;
 
-				_ => throw new NotImplementedException()
-			};
+			throw new NotImplementedException();
 		}
 	}
 
-	internal record FigureParams
+	internal class FigureParams
 	{
-		public bool[,] TileMap { get; init; }
-		public uint Color { get; init; }
+		public bool[,] TileMap { get; set; }
+		public uint Color { get; set; }
 	}
 }

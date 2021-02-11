@@ -19,18 +19,18 @@ namespace Engine
 			{
 				for (int y = 0; y < Size; ++y)
 				{
-					figure.Location = new(x, y);
+					figure.Location = new Location(x, y);
 					var tiles = figure.GetTiles();
 					//                     out of bounds                    intersection
 					if (tiles.All(t => this.Contains(t.Coords) && this.GetTile(t.Coords) is null))
 					{
-						figure.Location = new(0, 0);
+						figure.Location = new Location(0, 0);
 						return true;
 					}
 				}
 			}
 
-			figure.Location = new(0, 0);
+			figure.Location = new Location(0, 0);
 			return false;
 		}
 		

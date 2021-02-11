@@ -12,7 +12,7 @@
 			get => _figure;
 			set // fix
 			{
-				if (_figure is not null)
+				if (_figure != null)
 				{
 					foreach (var tile in _figure.GetTiles())
 					{
@@ -21,7 +21,7 @@
 				}
 
 				_figure = value;
-				if (_figure is not null)
+				if (_figure != null)
 				{
 					foreach (var tile in _figure.GetTiles())
 					{
