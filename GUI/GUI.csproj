@@ -8,6 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="obj\**" />
+    <Compile Remove="out\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <EmbeddedResource Remove="out\**" />
+    <None Remove="obj\**" />
+    <None Remove="out\**" />
+    <Page Remove="obj\**" />
+    <Page Remove="out\**" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.80.2" />
     <PackageReference Include="SkiaSharp.Views.WPF" Version="2.80.2" />
   </ItemGroup>

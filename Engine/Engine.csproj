@@ -4,5 +4,19 @@
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>9</LangVersion>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/out_core/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="obj\**" />
+    <Compile Remove="out\**" />
+    <EmbeddedResource Remove="obj\**" />
+    <EmbeddedResource Remove="out\**" />
+    <None Remove="obj\**" />
+    <None Remove="out\**" />
+  </ItemGroup>
 
 </Project>
