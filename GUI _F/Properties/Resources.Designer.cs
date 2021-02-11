@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 
-namespace GUI__F.Properties
+namespace GUI.Properties
 {
 	/// <summary>
 	///   A strongly-typed resource class, for looking up localized strings, etc.
