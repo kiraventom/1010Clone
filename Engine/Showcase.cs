@@ -9,9 +9,9 @@ namespace Engine
 		{
 			Maps = new ShowcaseMap[3]
 			{
-				new ShowcaseMap(4),
-				new ShowcaseMap(4),
-				new ShowcaseMap(4),
+				new(4),
+				new(4),
+				new(4),
 			};
 
 			Update();
@@ -53,8 +53,8 @@ namespace Engine
 
 			for (int i = 0; i < Maps.Length; ++i)
 			{
-				Figure figure = new Figure(FigureShapes.GetRandom());
-				figure.TryPutOnMap(Maps[i], new Location(0, 0));
+				Figure figure = new(FigureShapes.GetRandom());
+				figure.TryPutOnMap(Maps[i], new(0, 0));
 			}
 		}
 

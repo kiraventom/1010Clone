@@ -13,7 +13,6 @@ namespace Engine
 			var tiles = figure.GetTiles();
 			foreach (var tile in tiles)
 			{
-				tile.Parent = null;
 				Tiles[tile.X, tile.Y] = tile;
 			}
 
@@ -60,6 +59,7 @@ namespace Engine
 				var tile = isHorizontal ? Tiles[i, j] : Tiles[j, i];
 				Tiles[tile.X, tile.Y] = null;
 			}
+			Engine.Score += (int)this.Size;
 		}
 	}
 }

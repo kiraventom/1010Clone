@@ -7,10 +7,10 @@
 		}
 
 		private Figure _figure;
-		internal Figure Figure 
+		public Figure Figure 
 		{
 			get => _figure;
-			set
+			set // fix
 			{
 				if (_figure is not null)
 				{

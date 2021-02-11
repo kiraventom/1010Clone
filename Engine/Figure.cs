@@ -14,7 +14,7 @@ namespace Engine
 		}
 
 		public FigureShape Shape { get; }
-		public Location? Location { get; private set; }
+		public Location? Location { get; internal set; }
 		internal uint Color { get; }
 		private IEnumerable<Tile> Tiles { get; set; }
 
@@ -25,7 +25,7 @@ namespace Engine
 			//                     out of bounds                    intersection
 			if (tiles.Any(t => !map.Contains(t.Coords) ||  map.GetTile(t.Coords) is not null)) 
 			{
-				Location = new Location(0, 0);
+				Location = new(0, 0);
 				return false;
 			}
 
