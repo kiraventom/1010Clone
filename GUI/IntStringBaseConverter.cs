@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GUI__F
+namespace GUI
 {
     // shamelessly stolen from stackoverflow
 	public static class IntStringBaseConverter

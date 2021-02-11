@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Numerics;
 
-namespace Engine__F
+namespace Engine
 {
 	public static class Engine
 	{

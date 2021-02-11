@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using Engine__F;
+using Engine;
 
-namespace GUI__F
+namespace GUI
 {
 	class Draggable
 	{
