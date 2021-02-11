@@ -32,6 +32,10 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
+  <PropertyGroup>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/out/$(MSBuildProjectName)/bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/out/$(MSBuildProjectName)/obj</BaseIntermediateOutputPath>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
