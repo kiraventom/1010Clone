@@ -5,16 +5,4 @@
     <LangVersion>9</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="bin\**" />
-    <Compile Remove="obj\**" />
-    <Compile Remove="out\**" />
-    <EmbeddedResource Remove="bin\**" />
-    <EmbeddedResource Remove="obj\**" />
-    <EmbeddedResource Remove="out\**" />
-    <None Remove="bin\**" />
-    <None Remove="obj\**" />
-    <None Remove="out\**" />
-  </ItemGroup>
-
 </Project>

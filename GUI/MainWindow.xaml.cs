@@ -32,6 +32,12 @@ namespace GUI
 
 		private void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
+			DpiScaler.Initialize(this);
+
+			Width = this.Width / DpiScaler.Scale.Value;
+			Height = this.Height / DpiScaler.Scale.Value;
+			MainGrid.Margin = new(MainGrid.Margin.Left / DpiScaler.Scale.Value);
+
 			Restart();
 			TryLoadFromSave();
 			ResetSettings();
@@ -62,12 +68,6 @@ namespace GUI
 			Showcase = new();
 			Engine.Engine.Score = 0;
 			Title = "Счёт: " + Engine.Engine.Score + " / " + Properties.Settings.Default.BestScore;
-
-			DpiScaler.Initialize(this);
-
-			Width = this.Width / DpiScaler.Scale.Value;
-			Height = this.Height / DpiScaler.Scale.Value;
-			MainGrid.Margin = new(MainGrid.Margin.Left / DpiScaler.Scale.Value);
 
 			if (Left < 0)
 				this.Left = 0;
